@@ -1,5 +1,6 @@
 {
     "name": "inviqa/zalando-api-client",
+    "minimum-stability": "stable",
     "type": "library",
     "authors": [
         {
@@ -8,13 +9,19 @@
         }
     ],
     "require": {
-        "php": "^7.1"
+        "php": "~7.1",
+        "guzzlehttp/guzzle": "~6.2",
+        "symfony/filesystem": "~3.3",
+        "symfony/yaml": "~3.3",
+        "psr/log": "~1.0"
     },
     "require-dev": {
         "phpspec/phpspec": "^5.1",
         "behat/behat": "^3.5",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "webmozart/assert": "^1.4"
+        "webmozart/assert": "^1.4",
+        "incenteev/composer-parameter-handler": "~2.1",
+        "php-mock/php-mock-prophecy": "^0.0.2"
     },
     "autoload": {
         "psr-4": {
@@ -25,6 +32,9 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "InviqaTest\\": [
+                "tests/InviqaTest"
+            ],
             "": [
                 "features/bootstrap"
             ]
@@ -32,5 +42,18 @@
     },
     "config": {
         "bin-dir": "bin"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ]
+    },
+    "extra": {
+        "incenteev-parameters": {
+            "file": "tests/config/integration.yml"
+        }
     }
 }
