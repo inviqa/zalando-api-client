@@ -2,4 +2,9 @@ default:
     suites:
         domain:
             contexts:
-                - ApiContext
+                - ApiContext:
+                    testMode: true
+        integration:
+            contexts:
+                - ApiContext:
+                    testMode: false
