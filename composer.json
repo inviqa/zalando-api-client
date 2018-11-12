@@ -1,0 +1,29 @@
+{
+    "name": "inviqa/zalando-api-client",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Mark McKelvie",
+            "email": "mark.mckelvie@inviqa.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^5.1",
+        "behat/behat": "^3.5",
+        "friendsofphp/php-cs-fixer": "^2.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "": [
+                "features/bootstrap",
+                "src"
+            ]
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}

@@ -1,0 +1,16 @@
+# General
+bin/*
+.DS_Store
+._.DS_Store
+
+# Docker
+docker/*
+
+# Composer
+vendor/*
+
+# PHP Storm
+.idea
+
+# composer.lock is ignored - as this is a library
+composer.lock
