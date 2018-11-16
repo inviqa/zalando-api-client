@@ -6,6 +6,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
 use Inviqa\Zalando\Api\Client;
 use Inviqa\Zalando\Api\Client\ApiClient;
+use Inviqa\Zalando\Api\Request\ArticlePriceUpdateRequest;
 use Inviqa\Zalando\Api\Response\ClientResponse;
 use Inviqa\Zalando\Api\ZalandoConfiguration;
 use PhpSpec\ObjectBehavior;
@@ -22,6 +23,8 @@ class ApiClientSpec extends ObjectBehavior
     {
         $configuration->getAuthenticationEndpointUrl()
             ->willReturn('https://api-sandbox.merchants.zalando.com/auth/token');
+        $configuration->getArticlePriceUpdateEndpointUrl()
+            ->willReturn('https://api-sandbox.merchants.zalando.com/merchants/client-merchant-id/article-price');
         $configuration->getUsername()->willReturn('testuser');
         $configuration->getSecret()->willReturn('secret123');
 
@@ -51,5 +54,26 @@ class ApiClientSpec extends ObjectBehavior
         $body->getContents()->willReturn('{"access_token":"abc123","expires_in":7200}');
 
         $this->authenticate()->shouldReturnAnInstanceOf(ClientResponse::class);
+    }
+
+    function it_updates_the_article_price_and_returns_a_client_response(
+        ClientInterface $client,
+        ArticlePriceUpdateRequest $request,
+        ResponseInterface $response,
+        StreamInterface $body
+    ) {
+        $options = [];
+
+        $client->request(
+            'POST',
+            'https://api-sandbox.merchants.zalando.com/merchants/client-merchant-id/article-price',
+            $options
+        )->willReturn($response);
+        $response->getStatusCode()->willReturn(StatusCode::OK);
+        $response->getHeaderLine('Date')->willReturn('Mon, 07 Jan 2019 15:47:53 GMT');
+        $response->getBody()->willReturn($body);
+        $body->getContents()->willReturn('');
+
+        $this->updateArticlePrice($request)->shouldReturnAnInstanceOf(ClientResponse::class);
     }
 }

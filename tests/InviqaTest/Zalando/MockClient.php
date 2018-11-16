@@ -4,6 +4,7 @@ namespace InviqaTest\Zalando;
 
 use GuzzleHttp\Psr7\Response;
 use Inviqa\Zalando\Api\Client;
+use Inviqa\Zalando\Api\Request\ArticlePriceUpdateRequest;
 use Inviqa\Zalando\Api\Response\ClientResponse;
 use Inviqa\Zalando\Api\ZalandoConfiguration;
 use RuntimeException;
@@ -46,6 +47,15 @@ EOT;
         }
 
         return new ClientResponse(new Response(StatusCode::OK, [], self::AUTHENTICATION_SUCCESS_JSON));
+    }
+
+    public function updateArticlePrice(ArticlePriceUpdateRequest $request): ClientResponse
+    {
+        if (__FUNCTION__ === $this->failOnApiCall) {
+            throw new RuntimeException('Failed to update article price');
+        }
+
+        return new ClientResponse(new Response(StatusCode::OK, [], ''));
     }
 
     public function setFailOnApiCall(string $failOnApiCall): void

@@ -3,10 +3,12 @@
 namespace Inviqa\Zalando;
 
 use Inviqa\Zalando\Api\Article\ArticlePrice;
+use Inviqa\Zalando\Api\Article\ArticlePriceUpdater;
 use Inviqa\Zalando\Api\Client;
 use Inviqa\Zalando\Api\Client\ClientFactory;
 use Inviqa\Zalando\Api\Merchant\MerchantOperationMetadata;
 use Inviqa\Zalando\Api\Request\ArticlePriceUpdateRequest;
+use Inviqa\Zalando\Api\Response\ClientResponse;
 use Inviqa\Zalando\Api\Security\AuthenticationParameters;
 use Inviqa\Zalando\Api\Security\AuthenticationStorage;
 use Inviqa\Zalando\Api\Security\Authenticator;
@@ -32,6 +34,11 @@ class Application
     private $authenticator;
 
     /**
+     * @var ArticlePriceUpdater
+     */
+    private $articlePriceUpdater;
+
+    /**
      * @var null|LoggerInterface
      */
     private $logger;
@@ -41,6 +48,7 @@ class Application
         $this->createClient($configuration);
         $this->createAuthenticationStorage($configuration->getAuthenticationParametersFilePath());
         $this->authenticator = new Authenticator($this->client, $this->authenticationStorage, $logger);
+        $this->articlePriceUpdater = new ArticlePriceUpdater($this->client);
         $this->logger = $logger;
     }
 
@@ -54,11 +62,9 @@ class Application
         return $this->authenticator->authenticate();
     }
 
-    public function createArticlePriceUpdateRequest(
-        ArticlePrice $price,
-        MerchantOperationMetadata $metadata
-    ): ArticlePriceUpdateRequest {
-        return new ArticlePriceUpdateRequest($price, $metadata);
+    public function updateArticlePrice(ArticlePrice $price, MerchantOperationMetadata $metadata): ClientResponse
+    {
+        return $this->articlePriceUpdater->updateArticlePrice($price, $metadata);
     }
 
     protected function createClient(ZalandoConfiguration $configuration): void

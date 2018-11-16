@@ -2,8 +2,10 @@
 
 namespace InviqaTest\Zalando;
 
+use Closure;
 use Exception;
 use Inviqa\Zalando\Api\Client;
+use Inviqa\Zalando\Api\Request\ArticlePriceUpdateRequest;
 use Inviqa\Zalando\Api\Response\ClientResponse;
 
 class AccountableClient implements Client
@@ -25,13 +27,16 @@ class AccountableClient implements Client
 
     public function authenticate(): ClientResponse
     {
-        try {
+        return $this->callDecoratedClient(function () {
             return $this->decoratedClient->authenticate();
-        } catch (Exception $e) {
-            throw $e;
-        } finally {
-            $this->incrementApiCallCount(__FUNCTION__);
-        }
+        }, __FUNCTION__);
+    }
+
+    public function updateArticlePrice(ArticlePriceUpdateRequest $request): ClientResponse
+    {
+        return $this->callDecoratedClient(function () use ($request) {
+            return $this->decoratedClient->updateArticlePrice($request);
+        }, __FUNCTION__);
     }
 
     public function getApiCallCount(string $action): int
@@ -60,5 +65,16 @@ class AccountableClient implements Client
         }
 
         $this->apiCallCount[$action]++;
+    }
+
+    private function callDecoratedClient(Closure $closure, string $callingMethod): ClientResponse
+    {
+        try {
+            return $closure();
+        } catch (Exception $e) {
+            throw $e;
+        } finally {
+            $this->incrementApiCallCount($callingMethod);
+        }
     }
 }

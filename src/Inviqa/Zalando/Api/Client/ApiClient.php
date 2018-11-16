@@ -5,6 +5,7 @@ namespace Inviqa\Zalando\Api\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
 use Inviqa\Zalando\Api\Client;
+use Inviqa\Zalando\Api\Request\ArticlePriceUpdateRequest;
 use Inviqa\Zalando\Api\Response\ClientResponse;
 use Inviqa\Zalando\Api\ZalandoConfiguration;
 
@@ -34,6 +35,13 @@ class ApiClient implements Client
                 'grant_type' => 'client_credentials',
             ],
         ]);
+
+        return new ClientResponse($response);
+    }
+
+    public function updateArticlePrice(ArticlePriceUpdateRequest $request): ClientResponse
+    {
+        $response = $this->client->request('POST', $this->configuration->getArticlePriceUpdateEndpointUrl(), []);
 
         return new ClientResponse($response);
     }
