@@ -1,5 +1,6 @@
 # General
 bin/*
+app/config/*
 .DS_Store
 ._.DS_Store
 
@@ -14,3 +15,5 @@ vendor/*
 
 # composer.lock is ignored - as this is a library
 composer.lock
+
+tests/config/integration.yml
