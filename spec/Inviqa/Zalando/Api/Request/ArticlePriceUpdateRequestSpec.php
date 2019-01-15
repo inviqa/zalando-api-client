@@ -2,8 +2,8 @@
 
 namespace spec\Inviqa\Zalando\Api\Request;
 
+use Inviqa\Zalando\Api\Article\ArticlePrice;
 use Inviqa\Zalando\Api\Article\ArticleReference;
-use Inviqa\Zalando\Api\ArticlePrice\ArticlePrice;
 use Inviqa\Zalando\Api\Merchant\MerchantOperationMetadata;
 use Inviqa\Zalando\Api\Request\ArticlePriceUpdateRequest;
 use PhpSpec\ObjectBehavior;

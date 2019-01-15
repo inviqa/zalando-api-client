@@ -4,7 +4,11 @@ default:
             contexts:
                 - ApiContext:
                     testMode: true
+            filters:
+                tags: '~@integration'
         integration:
             contexts:
                 - ApiContext:
                     testMode: false
+            filters:
+                tags: '@integration'

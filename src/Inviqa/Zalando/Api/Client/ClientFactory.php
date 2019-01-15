@@ -4,17 +4,17 @@ namespace Inviqa\Zalando\Api\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Inviqa\Zalando\Api\Client;
-use Inviqa\Zalando\Api\Configuration;
+use Inviqa\Zalando\Api\ZalandoConfiguration;
 use InviqaTest\Zalando\MockClient;
 
 class ClientFactory
 {
     /**
-     * @var Configuration
+     * @var ZalandoConfiguration
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
+    public function __construct(ZalandoConfiguration $configuration)
     {
         $this->configuration = $configuration;
     }

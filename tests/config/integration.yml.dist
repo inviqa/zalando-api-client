@@ -1,6 +1,6 @@
 parameters:
+    merchant_id: <insert_value_here>
     authentication_endpoint_url: <insert_value_here>
     article_price_update_endpoint_url: <insert_value_here>
-    merchant_id: <insert_value_here>
     username: <insert_value_here>
     secret: <insert_value_here>

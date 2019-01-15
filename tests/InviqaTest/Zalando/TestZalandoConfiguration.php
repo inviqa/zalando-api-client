@@ -2,11 +2,11 @@
 
 namespace InviqaTest\Zalando;
 
-use Inviqa\Zalando\Api\Configuration;
+use Inviqa\Zalando\Api\ZalandoConfiguration;
 
-class TestConfiguration implements Configuration
+class TestZalandoConfiguration implements ZalandoConfiguration
 {
-    private const DEFAULT_AUTHENTICATION_CONFIG_FILE_PATH = __DIR__ . '/../../../app/config/zalando_authentication.yml';
+    private const AUTHENTICATION_PARAMETERS_FILE_PATH = __DIR__ . '/../../config/%sauthentication/authentication.yml';
 
     /**
      * @var bool
@@ -17,11 +17,6 @@ class TestConfiguration implements Configuration
      * @var string
      */
     private $merchantId;
-
-    /**
-     * @var string
-     */
-    private $authenticationConfigFilePath;
 
     /**
      * @var string
@@ -43,12 +38,10 @@ class TestConfiguration implements Configuration
      */
     private $secret;
 
-    public function __construct(bool $testMode = true, array $parameters = [])
+    public function __construct(array $parameters = [], bool $testMode = true)
     {
         $this->testMode = $testMode;
         $this->merchantId = $parameters['merchant_id'] ?? '';
-        $this->authenticationConfigFilePath = $parameters['authentication_config_file_path']
-            ?? self::DEFAULT_AUTHENTICATION_CONFIG_FILE_PATH;
         $this->authenticationEndpointUrl = $parameters['authentication_endpoint_url'] ?? '';
         $this->articlePriceUpdateEndpointUrl = $parameters['article_price_update_endpoint_url'] ?? '';
         $this->username = $parameters['username'] ?? '';
@@ -65,9 +58,9 @@ class TestConfiguration implements Configuration
         return $this->merchantId;
     }
 
-    public function getAuthenticationConfigFilePath(): string
+    public function getAuthenticationParametersFilePath(): string
     {
-        return $this->authenticationConfigFilePath;
+        return sprintf(self::AUTHENTICATION_PARAMETERS_FILE_PATH, $this->testMode ? 'test_' : '');
     }
 
     public function getAuthenticationEndpointUrl(): string
@@ -88,5 +81,10 @@ class TestConfiguration implements Configuration
     public function getSecret(): string
     {
         return $this->secret;
+    }
+
+    public function setSecret(string $secret): void
+    {
+        $this->secret = $secret;
     }
 }

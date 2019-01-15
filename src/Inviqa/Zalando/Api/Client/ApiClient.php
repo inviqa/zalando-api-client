@@ -5,13 +5,13 @@ namespace Inviqa\Zalando\Api\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
 use Inviqa\Zalando\Api\Client;
-use Inviqa\Zalando\Api\Configuration;
 use Inviqa\Zalando\Api\Response\ClientResponse;
+use Inviqa\Zalando\Api\ZalandoConfiguration;
 
 class ApiClient implements Client
 {
     /**
-     * @var Configuration
+     * @var ZalandoConfiguration
      */
     private $configuration;
 
@@ -20,7 +20,7 @@ class ApiClient implements Client
      */
     private $client;
 
-    public function __construct(Configuration $configuration, ClientInterface $client)
+    public function __construct(ZalandoConfiguration $configuration, ClientInterface $client)
     {
         $this->configuration = $configuration;
         $this->client = $client;

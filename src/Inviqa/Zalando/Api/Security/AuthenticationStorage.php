@@ -2,7 +2,8 @@
 
 namespace Inviqa\Zalando\Api\Security;
 
-use Inviqa\Zalando\Api\Configuration;
+use DateTime;
+use DateTimeImmutable;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
@@ -11,34 +12,39 @@ class AuthenticationStorage
     /**
      * @var Filesystem
      */
-    private $filesystem;
+    protected $filesystem;
 
     /**
      * @var string
      */
-    private $filePath;
+    protected $filePath;
 
-    public function __construct(Filesystem $filesystem, Configuration $configuration)
+    public function __construct(Filesystem $filesystem, string $filePath)
     {
         $this->filesystem = $filesystem;
-        $this->filePath = $configuration->getAuthenticationConfigFilePath();
+        $this->filePath = $filePath;
     }
 
-    public function save(array $data): void
+    public function save(AuthenticationParameters $parameters): void
     {
         $this->ensureDirectoryExists();
-        $this->filesystem->dumpFile($this->filePath, Yaml::dump($data));
+        $this->filesystem->dumpFile($this->filePath, Yaml::dump($parameters->toArray()));
     }
 
-    public function fetch(): array
+    public function fetch(): ?AuthenticationParameters
     {
-        $data = null;
-
-        if ($this->filesystem->exists($this->filePath)) {
-            $data = Yaml::parseFile($this->filePath, Yaml::PARSE_DATETIME);
+        if (!$this->filesystem->exists($this->filePath)) {
+            return null;
         }
 
-        return empty($data) ? [] : $data;
+        // @todo Update symfony/yaml to 3.4.x and use Yaml::parseFile here instead
+        $parameters = Yaml::parse(file_get_contents($this->filePath), Yaml::PARSE_DATETIME);
+
+        if ($parameters['authenticated_at'] instanceof DateTime) {
+            $parameters['authenticated_at'] = DateTimeImmutable::createFromMutable($parameters['authenticated_at']);
+        }
+
+        return empty($parameters) ? null : new AuthenticationParameters($parameters);
     }
 
     private function ensureDirectoryExists(): void

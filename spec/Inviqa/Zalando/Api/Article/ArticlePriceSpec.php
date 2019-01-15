@@ -1,9 +1,9 @@
 <?php
 
-namespace spec\Inviqa\Zalando\Api\ArticlePrice;
+namespace spec\Inviqa\Zalando\Api\Article;
 
+use Inviqa\Zalando\Api\Article\ArticlePrice;
 use Inviqa\Zalando\Api\Article\ArticleReference;
-use Inviqa\Zalando\Api\ArticlePrice\ArticlePrice;
 use PhpSpec\ObjectBehavior;
 
 /**

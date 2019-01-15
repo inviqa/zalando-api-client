@@ -4,6 +4,7 @@ namespace Inviqa\Zalando\Api\Response;
 
 use DateTimeImmutable;
 use Psr\Http\Message\ResponseInterface;
+use Teapot\StatusCode;
 
 class ClientResponse
 {
@@ -24,7 +25,7 @@ class ClientResponse
 
     public function __construct(ResponseInterface $response)
     {
-        $this->successful = 200 === $response->getStatusCode();
+        $this->successful = StatusCode::OK === $response->getStatusCode();
         $this->date = new DateTimeImmutable($response->getHeaderLine('Date') ?: '@' . time());
         $this->content = $response->getBody()->getContents();
     }

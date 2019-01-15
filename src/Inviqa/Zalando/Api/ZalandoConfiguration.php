@@ -2,15 +2,13 @@
 
 namespace Inviqa\Zalando\Api;
 
-use SplFileObject;
-
-interface Configuration
+interface ZalandoConfiguration
 {
     public function isTestMode(): bool;
 
     public function getMerchantId(): string;
 
-    public function getAuthenticationConfigFilePath(): string;
+    public function getAuthenticationParametersFilePath(): string;
 
     public function getAuthenticationEndpointUrl(): string;
 

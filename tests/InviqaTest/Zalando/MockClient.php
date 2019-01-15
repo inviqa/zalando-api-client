@@ -4,8 +4,10 @@ namespace InviqaTest\Zalando;
 
 use GuzzleHttp\Psr7\Response;
 use Inviqa\Zalando\Api\Client;
-use Inviqa\Zalando\Api\Configuration;
 use Inviqa\Zalando\Api\Response\ClientResponse;
+use Inviqa\Zalando\Api\ZalandoConfiguration;
+use RuntimeException;
+use Teapot\StatusCode;
 
 class MockClient implements Client
 {
@@ -23,17 +25,31 @@ class MockClient implements Client
 EOT;
 
     /**
-     * @var Configuration
+     * @var ZalandoConfiguration
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
+    /**
+     * @var string
+     */
+    private $failOnApiCall = '';
+
+    public function __construct(ZalandoConfiguration $configuration)
     {
         $this->configuration = $configuration;
     }
 
     public function authenticate(): ClientResponse
     {
-        return new ClientResponse(new Response(200, [], self::AUTHENTICATION_SUCCESS_JSON));
+        if (__FUNCTION__ === $this->failOnApiCall) {
+            throw new RuntimeException('Invalid credentials');
+        }
+
+        return new ClientResponse(new Response(StatusCode::OK, [], self::AUTHENTICATION_SUCCESS_JSON));
+    }
+
+    public function setFailOnApiCall(string $failOnApiCall): void
+    {
+        $this->failOnApiCall = $failOnApiCall;
     }
 }

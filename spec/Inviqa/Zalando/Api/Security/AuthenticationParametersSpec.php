@@ -1,25 +1,30 @@
 <?php
 
-namespace spec\Inviqa\Zalando\Api\Model;
+namespace spec\Inviqa\Zalando\Api\Security;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Inviqa\Zalando\Api\Model\AuthenticationData;
+use Inviqa\Zalando\Api\Security\AuthenticationParameters;
 use PhpSpec\ObjectBehavior;
 
 /**
- * @mixin AuthenticationData
+ * @mixin AuthenticationParameters
  */
-class AuthenticationDataSpec extends ObjectBehavior
+class AuthenticationParametersSpec extends ObjectBehavior
 {
+    /**
+     * @var array
+     */
+    private $parameters;
+
     function let()
     {
-        $authenticationData = [
+        $this->parameters = [
             'authenticated_at' => new DateTimeImmutable('2019-01-07 11:48:27'),
             'access_token' => 'abc123',
             'expires_in' => 7200,
         ];
-        $this->beConstructedWith($authenticationData);
+        $this->beConstructedWith($this->parameters);
     }
 
     function it_gets_authenticated_at()
@@ -48,36 +53,36 @@ class AuthenticationDataSpec extends ObjectBehavior
 
     function it_knows_if_the_access_token_has_expired()
     {
-        $authenticationData = [
+        $parameters = [
             'authenticated_at' => new DateTimeImmutable('60 seconds ago'),
             'access_token' => 'abc123',
             'expires_in' => 60,
         ];
-        $this->beConstructedWith($authenticationData);
+        $this->beConstructedWith($parameters);
 
         $this->hasAccessTokenExpired()->shouldReturn(true);
     }
 
     function it_knows_if_the_access_token_will_expire_soon()
     {
-        $authenticationData = [
+        $parameters = [
             'authenticated_at' => new DateTimeImmutable('50 seconds ago'),
             'access_token' => 'abc123',
             'expires_in' => 60,
         ];
-        $this->beConstructedWith($authenticationData);
+        $this->beConstructedWith($parameters);
 
         $this->hasAccessTokenExpired()->shouldReturn(true);
     }
 
     function it_knows_if_the_access_token_has_not_expired()
     {
-        $authenticationData = [
+        $parameters = [
             'authenticated_at' => new DateTimeImmutable('49 seconds ago'),
             'access_token' => 'abc123',
             'expires_in' => 60,
         ];
-        $this->beConstructedWith($authenticationData);
+        $this->beConstructedWith($parameters);
 
         $this->hasAccessTokenExpired()->shouldReturn(false);
     }
@@ -85,12 +90,8 @@ class AuthenticationDataSpec extends ObjectBehavior
     function it_throws_an_exception_if_authenticated_at_is_not_a_date_time_immutable_instance()
     {
         $exception = new InvalidArgumentException('authenticated_at parameter is not a ' . DateTimeImmutable::class);
-        $authenticationData = [
-            'authenticated_at' => '2019-01-07 11:48:27',
-            'access_token' => 'abc123',
-            'expires_in' => 7200,
-        ];
-        $this->beConstructedWith($authenticationData);
+        $parameters = ['authenticated_at' => '2019-01-07 11:48:27'];
+        $this->beConstructedWith($parameters);
 
         $this->shouldThrow($exception)->duringInstantiation();
     }
@@ -98,13 +99,41 @@ class AuthenticationDataSpec extends ObjectBehavior
     function it_throws_an_exception_if_access_token_is_empty()
     {
         $exception = new InvalidArgumentException('Access token cannot be empty');
-        $authenticationData = [
+        $parameters = [
             'authenticated_at' => new DateTimeImmutable('2019-01-07 11:48:27'),
             'access_token' => '',
-            'expires_in' => 7200,
         ];
-        $this->beConstructedWith($authenticationData);
+        $this->beConstructedWith($parameters);
 
         $this->shouldThrow($exception)->duringInstantiation();
+    }
+
+    function it_can_be_converted_to_an_array()
+    {
+        $this->toArray()->shouldReturn($this->parameters);
+    }
+
+    function it_knows_it_is_equal_to_another_instance()
+    {
+        $parameters = [
+            'authenticated_at' => new DateTimeImmutable('2019-01-07 11:48:27'),
+            'access_token' => 'abc123',
+            'expires_in' => 7200,
+        ];
+        $another = new AuthenticationParameters($parameters);
+
+        $this->equals($another)->shouldReturn(true);
+    }
+
+    function it_knows_it_is_not_equal_to_another_instance()
+    {
+        $parameters = [
+            'authenticated_at' => new DateTimeImmutable('2019-01-07 11:48:28'),
+            'access_token' => 'abc123',
+            'expires_in' => 7200,
+        ];
+        $another = new AuthenticationParameters($parameters);
+
+        $this->equals($another)->shouldReturn(false);
     }
 }

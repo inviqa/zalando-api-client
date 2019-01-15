@@ -1,8 +1,6 @@
 <?php
 
-namespace Inviqa\Zalando\Api\ArticlePrice;
-
-use Inviqa\Zalando\Api\Article\ArticleReference;
+namespace Inviqa\Zalando\Api\Article;
 
 class ArticlePrice
 {

@@ -2,7 +2,7 @@
 
 namespace Inviqa\Zalando\Api\Request;
 
-use Inviqa\Zalando\Api\ArticlePrice\ArticlePrice;
+use Inviqa\Zalando\Api\Article\ArticlePrice;
 use Inviqa\Zalando\Api\Merchant\MerchantOperationMetadata;
 
 class ArticlePriceUpdateRequest

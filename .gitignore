@@ -1,6 +1,5 @@
 # General
 bin/*
-app/config/*
 .DS_Store
 ._.DS_Store
 .php_cs.cache
@@ -18,3 +17,5 @@ vendor/*
 composer.lock
 
 tests/config/integration.yml
+tests/config/test_authentication/*
+tests/config/authentication/*

@@ -5,7 +5,6 @@ namespace Inviqa\Zalando\Api\Security;
 use Exception;
 use Inviqa\Zalando\Api\Client;
 use Inviqa\Zalando\Api\Exception\ZalandoException;
-use Inviqa\Zalando\Api\Model\AuthenticationData;
 use Psr\Log\LoggerInterface;
 
 class Authenticator
@@ -21,7 +20,7 @@ class Authenticator
     private $storage;
 
     /**
-     * @var LoggerInterface|null
+     * @var null|LoggerInterface
      */
     private $logger;
 
@@ -32,12 +31,12 @@ class Authenticator
         $this->logger = $logger;
     }
 
-    public function authenticate(): AuthenticationData
+    public function authenticate(): AuthenticationParameters
     {
-        $authenticationData = $this->getPreviousAuthenticationData();
+        $authenticationParameters = $this->getPreviousAuthenticationParameters();
 
-        if (isset($authenticationData) && !$authenticationData->hasAccessTokenExpired()) {
-            return $authenticationData;
+        if (isset($authenticationParameters) && !$authenticationParameters->hasAccessTokenExpired()) {
+            return $authenticationParameters;
         }
 
         try {
@@ -46,24 +45,27 @@ class Authenticator
             throw new ZalandoException('Zalando authentication error: ' . $e->getMessage(), 0, $e);
         }
 
-        $data = array_merge(['authenticated_at' => $response->getDate()], json_decode($response->getContent(), true));
+        $data = new AuthenticationParameters(array_merge(
+            ['authenticated_at' => $response->getDate()],
+            json_decode($response->getContent(), true)
+        ));
 
         $this->storage->save($data);
 
-        return new AuthenticationData($data);
+        return $data;
     }
 
-    private function getPreviousAuthenticationData(): ?AuthenticationData
+    private function getPreviousAuthenticationParameters(): ?AuthenticationParameters
     {
         try {
-            $data = $this->storage->fetch();
-
-            return empty($data) ? null : new AuthenticationData($data);
+            return $this->storage->fetch();
         } catch (Exception $e) {
+            $message = 'Fetching Zalando authentication parameters error: ' . $e->getMessage();
+
             if ($this->logger) {
-                $this->logger->warning($e->getMessage());
+                $this->logger->warning($message);
             } else {
-                throw new ZalandoException($e->getMessage());
+                throw new ZalandoException($message);
             }
         }
 
