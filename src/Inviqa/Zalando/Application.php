@@ -2,25 +2,16 @@
 
 namespace Inviqa\Zalando;
 
-use Inviqa\Zalando\Api\ArticlePriceUpdater;
-use Inviqa\Zalando\Api\Model\ArticlePrice;
-use Inviqa\Zalando\Api\Response\ArticlePriceUpdateResponse;
-use Inviqa\Zalando\Api\Writer\JsonFileWriterFactory;
+use Inviqa\Zalando\Api\ArticlePrice\ArticlePrice;
+use Inviqa\Zalando\Api\Merchant\MerchantOperationMetadata;
+use Inviqa\Zalando\Api\Request\ArticlePriceUpdateRequest;
 
 class Application
 {
-    /**
-     * @var ArticlePriceUpdater
-     */
-    private $articlePriceUpdater;
-
-    public function __construct()
-    {
-        $this->articlePriceUpdater = new ArticlePriceUpdater(JsonFileWriterFactory::create());
-    }
-
-    public function updateArticlePrice(ArticlePrice $articlePrice): ArticlePriceUpdateResponse
-    {
-        return $this->articlePriceUpdater->updateArticlePrice($articlePrice);
+    public function createArticlePriceUpdateRequest(
+        ArticlePrice $price,
+        MerchantOperationMetadata $metadata
+    ): ArticlePriceUpdateRequest {
+        return new ArticlePriceUpdateRequest($price, $metadata);
     }
 }
