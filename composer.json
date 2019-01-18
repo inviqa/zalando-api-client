@@ -13,13 +13,20 @@
     "require-dev": {
         "phpspec/phpspec": "^5.1",
         "behat/behat": "^3.5",
-        "friendsofphp/php-cs-fixer": "^2.13"
+        "friendsofphp/php-cs-fixer": "^2.13",
+        "webmozart/assert": "^1.4"
     },
     "autoload": {
         "psr-4": {
             "": [
-                "features/bootstrap",
                 "src"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "": [
+                "features/bootstrap"
             ]
         }
     },
